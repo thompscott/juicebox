@@ -1,4 +1,4 @@
-const { client, getAllUsers, createUser, updateUser } = require('./index');
+const { client, getAllUsers, createUser, updateUser, getAllPosts, createPost } = require('./index');
 
 async function dropTables() {
   try {
@@ -84,6 +84,28 @@ async function createInitialUsers() {
   }
 }
 
+async function createInitialPosts() {
+  try {
+    console.log('Starting to create posts...');
+
+    await createPost({
+      authorId: 1,
+      title: 'Josh Goes to the Store',
+      content: 'Joshua went to the store today!'
+    });
+    await createPost({
+      authorId: 3,
+      title: 'Something happened',
+      content: 'Something happened again today! For the first time I have ever seen it happen.'
+    });
+
+    console.log('Finished creating posts!');
+  } catch (error) {
+    console.error('Error creating posts!');
+    throw error;
+  }
+}
+
 async function rebuildDB() {
   try {
     client.connect();
@@ -91,6 +113,7 @@ async function rebuildDB() {
     await dropTables();
     await createTables();
     await createInitialUsers();
+    await createInitialPosts();
   } catch (error) {
     throw error;
   }
@@ -103,6 +126,10 @@ async function testDB() {
     console.log('Calling getAllUsers');
     const users = await getAllUsers();
     console.log('Result:', users);
+
+    console.log('Calling getAllPosts');
+    const posts = await getAllPosts();
+    console.log('Result:', posts);
 
     console.log('Calling updateUser on users[0]');
     const updateUserResult = await updateUser(users[0].id, {

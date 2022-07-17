@@ -60,9 +60,43 @@ async function getAllUsers() {
   return rows;
 }
 
+/*Create Posts*/
+async function createPost({
+  authorId,
+  title,
+  content
+}) {
+  try {
+    const { rows } = await client.query(
+    `
+      INSERT INTO posts("authorId", title, content) 
+      VALUES($1, $2, $3) 
+      RETURNING *;
+    `,
+    [authorId, title, content]
+    );
+
+    return rows;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getAllPosts() {
+  const { rows } = await client.query(
+    `SELECT "authorId", title, content
+    FROM posts;
+  `
+  );
+
+  return rows;
+}
+
 module.exports = {
   client,
   getAllUsers,
   createUser,
   updateUser,
+  getAllPosts,
+  createPost
 };
