@@ -1,4 +1,4 @@
-const { client, getAllUsers, createUser, updateUser, getAllPosts, createPost } = require('./index');
+const { client, getAllUsers, createUser, updateUser, getAllPosts, createPost, updatePost } = require('./index');
 
 async function dropTables() {
   try {
@@ -137,6 +137,13 @@ async function testDB() {
       location: 'Lesterville, KY',
     });
     console.log('Result:', updateUserResult);
+
+    console.log('Calling updatePost on posts[0]');
+    const updatePostResult = await updatePost(posts[0].id, {
+      title: 'Newname Sogood',
+      content: 'This is new content'
+    });
+    console.log('Result:', updatePostResult);
 
     console.log('Finished database tests!');
   } catch (error) {
