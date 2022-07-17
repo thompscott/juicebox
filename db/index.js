@@ -61,19 +61,15 @@ async function getAllUsers() {
 }
 
 /*Posts*/
-async function createPost({
-  authorId,
-  title,
-  content
-}) {
+async function createPost({ authorId, title, content }) {
   try {
     const { rows } = await client.query(
-    `
+      `
       INSERT INTO posts("authorId", title, content) 
       VALUES($1, $2, $3) 
       RETURNING *;
     `,
-    [authorId, title, content]
+      [authorId, title, content]
     );
 
     return rows;
@@ -122,6 +118,40 @@ async function updatePost(id, fields = {}) {
   }
 }
 
+async function getPostsByUser(userId) {
+  try {
+    const { rows } = await client.query(`
+      SELECT * FROM posts
+      WHERE "authorId"=${userId};
+    `);
+
+    return rows;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getUserById(userId) {
+  // first get the user (NOTE: Remember the query returns
+  try {
+    const { rows } = await client.query(`
+    SELECT username, name, location, password FROM users
+    WHERE id=${userId};
+  `);
+    if (!rows.length) {
+      return null;
+    }
+
+    delete rows[0].password;
+    const post = await getPostsByUser(userId);
+
+    rows[0].posts = post;
+    return rows;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   client,
   getAllUsers,
@@ -129,5 +159,7 @@ module.exports = {
   updateUser,
   getAllPosts,
   createPost,
-  updatePost
+  updatePost,
+  getPostsByUser,
+  getUserById,
 };

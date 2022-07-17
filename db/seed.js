@@ -1,4 +1,14 @@
-const { client, getAllUsers, createUser, updateUser, getAllPosts, createPost, updatePost } = require('./index');
+const {
+  client,
+  getAllUsers,
+  createUser,
+  updateUser,
+  getAllPosts,
+  createPost,
+  updatePost,
+  getPostsByUser,
+  getUserById,
+} = require('./index');
 
 async function dropTables() {
   try {
@@ -91,12 +101,18 @@ async function createInitialPosts() {
     await createPost({
       authorId: 1,
       title: 'Josh Goes to the Store',
-      content: 'Joshua went to the store today!'
+      content: 'Joshua went to the store today!',
+    });
+    await createPost({
+      authorId: 1,
+      title: 'Josh Goes to the Mall',
+      content: 'Joshua went to the Mall today!',
     });
     await createPost({
       authorId: 3,
       title: 'Something happened',
-      content: 'Something happened again today! For the first time I have ever seen it happen.'
+      content:
+        'Something happened again today! For the first time I have ever seen it happen.',
     });
 
     console.log('Finished creating posts!');
@@ -138,12 +154,20 @@ async function testDB() {
     });
     console.log('Result:', updateUserResult);
 
-    console.log('Calling updatePost on posts[0]');
-    const updatePostResult = await updatePost(posts[0].id, {
-      title: 'Newname Sogood',
-      content: 'This is new content'
-    });
-    console.log('Result:', updatePostResult);
+    // console.log('Calling updatePost on posts[0]');
+    // const updatePostResult = await updatePost(posts[0].id, {
+    //   title: 'Newname Sogood',
+    //   content: 'This is new content',
+    // });
+    // console.log('Result:', updatePostResult);
+
+    console.log('Calling getPostsByUsers[0]');
+    const postsByUsers = await getPostsByUser(users[0].id);
+    console.log('Result:', postsByUsers);
+
+    console.log('Getting User by id = 1');
+    const userById = await getUserById(1);
+    console.log('Result:', userById);
 
     console.log('Finished database tests!');
   } catch (error) {
