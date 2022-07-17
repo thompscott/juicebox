@@ -175,6 +175,7 @@ async function testDB() {
     throw error;
   }
 }
+
 rebuildDB()
   .then(testDB)
   .catch(console.error)
