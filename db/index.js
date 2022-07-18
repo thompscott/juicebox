@@ -135,17 +135,56 @@ async function getUserById(userId) {
   // first get the user (NOTE: Remember the query returns
   try {
     const { rows } = await client.query(`
-    SELECT username, name, location, password FROM users
+    SELECT id, username, name, location, active FROM users
     WHERE id=${userId};
   `);
     if (!rows.length) {
       return null;
     }
 
-    delete rows[0].password;
     const post = await getPostsByUser(userId);
-
     rows[0].posts = post;
+
+    return rows;
+  } catch (error) {
+    throw error;
+  }
+}
+
+/*Tags*/
+async function createTags(tagList) {
+  if (tagList.length === 0) { 
+    return; 
+  }
+
+  // need something like: $1), ($2), ($3 
+  const insertValues = tagList.map(
+    (_, index) => `$${index + 1}`).join('), (');
+  // then we can use: (${ insertValues }) in our string template
+
+  // need something like $1, $2, $3
+  const selectValues = tagList.map(
+    (_, index) => `$${index + 1}`).join(', ');
+  // then we can use (${ selectValues }) in our string template
+
+  try {
+    await client.query(
+      `
+      INSERT INTO tags(name) 
+      VALUES ${insertValues} 
+      ON CONFLICT (name) DO NOTHING;
+    `,
+      insertValues
+    );
+    const { rows } = await client.query(
+      `
+      SELECT * FROM tags
+      WHERE name
+      IN (${selectValues})
+      `,
+      selectValues
+    )
+
     return rows;
   } catch (error) {
     throw error;
@@ -162,4 +201,5 @@ module.exports = {
   updatePost,
   getPostsByUser,
   getUserById,
+  createTags
 };
