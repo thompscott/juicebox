@@ -12,6 +12,7 @@ const {
   createPostTag,
   getPostById,
   addTagsToPost,
+  getPostsByTagName,
 } = require('./index');
 
 async function dropTables() {
@@ -87,21 +88,21 @@ async function createInitialUsers() {
       password: 'bertie99',
       name: 'Al Bert',
       location: 'Sidney, Australia',
-      active: true
+      active: true,
     });
     await createUser({
       username: 'sandra',
       password: '2sandy4me',
       name: 'Just Sandra',
       location: "Ain't tellin'",
-      active: true
+      active: true,
     });
     await createUser({
       username: 'glamgal',
       password: 'soglam',
       name: 'Joshua',
       location: 'Upper East Side',
-      active: true
+      active: true,
     });
 
     console.log('Finished creating users!');
@@ -119,20 +120,20 @@ async function createInitialPosts() {
       authorId: 1,
       title: 'Josh Goes to the Store',
       content: 'Joshua went to the store today!',
-      tags: ["#happy", "#youcandoanything"]
+      tags: ['#happy', '#youcandoanything'],
     });
     await createPost({
       authorId: 2,
       title: 'Josh Goes to the Mall',
       content: 'Joshua went to the Mall today!',
-      tags: ["#happy", "#worst-day-ever"]
+      tags: ['#happy', '#worst-day-ever'],
     });
     await createPost({
       authorId: 3,
       title: 'Something happened',
       content:
         'Something happened again today! For the first time I have ever seen it happen.',
-        tags: ["#happy", "#youcandoanything", "#canmandoeverything"]
+      tags: ['#happy', '#youcandoanything', '#canmandoeverything'],
     });
 
     console.log('Finished creating posts!');
@@ -141,7 +142,6 @@ async function createInitialPosts() {
     throw error;
   }
 }
-
 
 async function rebuildDB() {
   try {
@@ -191,11 +191,15 @@ async function testDB() {
     const userById = await getUserById(1);
     console.log('Result:', userById);
 
-    console.log("Calling updatePost on posts[1], only updating tags");
+    console.log('Calling updatePost on posts[1], only updating tags');
     const updatePostTagsResult = await updatePost(posts[1].id, {
-      tags: ["#youcandoanything", "#redfish", "#bluefish"]
+      tags: ['#youcandoanything', '#redfish', '#bluefish'],
     });
-    console.log("Result:", updatePostTagsResult);
+    console.log('Result:', updatePostTagsResult);
+
+    console.log('Calling getPostsByTagName with #happy');
+    const postsWithHappy = await getPostsByTagName('#happy');
+    console.log('Result:', postsWithHappy);
 
     console.log('Finished database tests!');
   } catch (error) {
