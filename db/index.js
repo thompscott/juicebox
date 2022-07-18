@@ -79,13 +79,20 @@ async function createPost({ authorId, title, content }) {
 }
 
 async function getAllPosts() {
-  const { rows } = await client.query(
-    `SELECT "authorId", title, content, id
-    FROM posts;
-  `
-  );
+  try {
+    const { rows: postIds } = await client.query(`
+      SELECT id
+      FROM posts;
+    `);
 
-  return rows;
+    const posts = await Promise.all(
+      postIds.map((post) => getPostById(post.id))
+    );
+
+    return posts;
+  } catch (error) {
+    throw error;
+  }
 }
 
 async function updatePost(id, fields = {}) {
@@ -120,12 +127,17 @@ async function updatePost(id, fields = {}) {
 
 async function getPostsByUser(userId) {
   try {
-    const { rows } = await client.query(`
-      SELECT * FROM posts
+    const { rows: postIds } = await client.query(`
+      SELECT id 
+      FROM posts 
       WHERE "authorId"=${userId};
     `);
 
-    return rows;
+    const posts = await Promise.all(
+      postIds.map((post) => getPostById(post.id))
+    );
+
+    return posts;
   } catch (error) {
     throw error;
   }
