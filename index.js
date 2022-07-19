@@ -3,7 +3,7 @@ const server = express();
 const port = 3000;
 const apiRouter = require('./api');
 const morgan = require('morgan');
-
+require('dotenv').config();
 
 //1)MIDDLEWARES
 
@@ -21,7 +21,7 @@ server.use(express.json());
 //2)Routes
 
 // SERVER
-const {client} = require('./db');
+const { client } = require('./db');
 client.connect();
 
 server.listen(port, () => {
