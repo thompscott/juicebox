@@ -6,6 +6,7 @@ const morgan = require('morgan');
 require('dotenv').config();
 
 //1)MIDDLEWARES
+server.use(express.json());
 
 server.use((req, res, next) => {
   console.log('<____Body Logger START____>');
@@ -16,7 +17,7 @@ server.use((req, res, next) => {
 });
 server.use(morgan('dev'));
 server.use('/api', apiRouter);
-server.use(express.json());
+
 
 //2)Routes
 

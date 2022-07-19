@@ -1,9 +1,11 @@
 const jwt = require('jsonwebtoken');
 const { getPostById } = require('../db');
+require('dotenv').config();
 const { JWT_SECRET } = process.env;
 const express = require('express');
 const apiRouter = express.Router();
 
+//JWT middleware
 apiRouter.use(async (req, res, next) => {
   const prefix = 'Bearer ';
   const auth = req.header('Authorization');
@@ -30,6 +32,14 @@ apiRouter.use(async (req, res, next) => {
     });
   }
 });
+
+apiRouter.use((req, res, next) => {
+    if (req.user) {
+      console.log("User is set:", req.user);
+    }
+  
+    next();
+  });  
 
 //ROUTERS
 
