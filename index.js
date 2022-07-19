@@ -4,6 +4,7 @@ const port = 3000;
 const apiRouter = require('./api');
 const morgan = require('morgan');
 
+
 //1)MIDDLEWARES
 
 server.use((req, res, next) => {
@@ -20,6 +21,9 @@ server.use(express.json());
 //2)Routes
 
 // SERVER
+const {client} = require('./db');
+client.connect();
+
 server.listen(port, () => {
   console.log(`Running on server: ${port}`);
 });
