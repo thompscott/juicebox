@@ -29,7 +29,8 @@ postsRouter.get('/', async (req, res) => {
 });
 
 postsRouter.get('/:id', async (req, res) => {
-  res.send('pereeeee');
+  post = req.params.id;
+  res.send(post);
 });
 
 postsRouter.post('/', requireUser, async (req, res, next) => {
@@ -98,9 +99,9 @@ postsRouter.patch('/:postId', requireUser, async (req, res, next) => {
 module.exports = postsRouter;
 
 //curl http://localhost:3000/api/users/login -H "Content-Type: application/json" -X POST -d '{"username": "albert", "password": "bertie99"}'
-//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTgzMzg1Njl9.eBHKbJl8ZnFk06YUW2MioOmpI1F0VA4SM6RBXHU4vgs
+//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTgzNDE2OTJ9.cMEY6-4kUqbmBpG7K3dbkMJ2Mj2R5wNjCdYO1b0iGjk
 
 // curl http://localhost:3000/api/posts -X POST -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTgzMzg1Njl9.eBHKbJl8ZnFk06YUW2MioOmpI1F0VA4SM6RBXHU4vgs' -H 'Content-Type: application/json' -d '{"title": "I still do not like tags", "content": "CMON! why do people use them?"}'
 
 //PATCH
-//curl http://localhost:3000/api/posts/1 -X PATCH -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTgzMzg1Njl9.eBHKbJl8ZnFk06YUW2MioOmpI1F0VA4SM6RBXHU4vgs' -H 'Content-Type: application/json' -d '{"title": "updating my old stuff", "tags": "#oldisnewagain"}'
+//curl http://localhost:3000/api/posts/1 -X PATCH -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTgzNDE2OTJ9.cMEY6-4kUqbmBpG7K3dbkMJ2Mj2R5wNjCdYO1b0iGjk' -H 'Content-Type: application/json' -d '{"title": "updating my old stuff", "tags": "#oldisnewagain"}'
