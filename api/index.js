@@ -57,6 +57,7 @@ apiRouter.use('/posts/:id', postsRouter);
 
 const tagsRouter = require('./tags');
 apiRouter.use('/tags', tagsRouter);
+apiRouter.use('/tags/:tagName/posts', tagsRouter);
 
 apiRouter.use((error, req, res, next) => {
   res.send({
