@@ -1,6 +1,12 @@
 const express = require('express');
 const postsRouter = express.Router();
-const { getAllPosts, createPost, getUserByUsername } = require('../db');
+const {
+  getAllPosts,
+  createPost,
+  getUserByUsername,
+  updatePost,
+  getPostById,
+} = require('../db');
 const { requireUser } = require('./utils');
 
 postsRouter.use((req, res, next) => {
@@ -9,12 +15,21 @@ postsRouter.use((req, res, next) => {
   next();
 });
 
+postsRouter.use('/:id', (req, res, next) => {
+  console.log('A request is being made to /posts');
+
+  next();
+});
+
 postsRouter.get('/', async (req, res) => {
   const posts = await getAllPosts();
-
   res.send({
     posts,
   });
+});
+
+postsRouter.get('/:id', async (req, res) => {
+  res.send('pereeeee');
 });
 
 postsRouter.post('/', requireUser, async (req, res, next) => {
@@ -45,9 +60,47 @@ postsRouter.post('/', requireUser, async (req, res, next) => {
   }
 });
 
+postsRouter.patch('/:postId', requireUser, async (req, res, next) => {
+  const { postId } = req.params;
+  const { title, content, tags } = req.body;
+
+  const updateFields = {};
+
+  if (tags && tags.length > 0) {
+    updateFields.tags = tags.trim().split(/\s+/);
+  }
+
+  if (title) {
+    updateFields.title = title;
+  }
+
+  if (content) {
+    updateFields.content = content;
+  }
+
+  try {
+    const originalPost = await getPostById(postId);
+
+    if (originalPost.author.id === req.user.id) {
+      const updatedPost = await updatePost(postId, updateFields);
+      res.send({ post: updatedPost });
+    } else {
+      next({
+        name: 'UnauthorizedUserError',
+        message: 'You cannot update a post that is not yours',
+      });
+    }
+  } catch ({ name, message }) {
+    next({ name, message });
+  }
+});
+
 module.exports = postsRouter;
 
 //curl http://localhost:3000/api/users/login -H "Content-Type: application/json" -X POST -d '{"username": "albert", "password": "bertie99"}'
 //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTgzMzg1Njl9.eBHKbJl8ZnFk06YUW2MioOmpI1F0VA4SM6RBXHU4vgs
 
 // curl http://localhost:3000/api/posts -X POST -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTgzMzg1Njl9.eBHKbJl8ZnFk06YUW2MioOmpI1F0VA4SM6RBXHU4vgs' -H 'Content-Type: application/json' -d '{"title": "I still do not like tags", "content": "CMON! why do people use them?"}'
+
+//PATCH
+//curl http://localhost:3000/api/posts/1 -X PATCH -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTgzMzg1Njl9.eBHKbJl8ZnFk06YUW2MioOmpI1F0VA4SM6RBXHU4vgs' -H 'Content-Type: application/json' -d '{"title": "updating my old stuff", "tags": "#oldisnewagain"}'
