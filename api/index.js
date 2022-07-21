@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { getPostById } = require('../db');
+const { getUserById } = require('../db');
 require('dotenv').config();
 const { JWT_SECRET } = process.env;
 const express = require('express');
@@ -19,7 +19,7 @@ apiRouter.use(async (req, res, next) => {
       const { id } = jwt.verify(token, JWT_SECRET);
 
       if (id) {
-        req.user = await getPostById(id);
+        req.user = await getUserById(id);
         next();
       }
     } catch ({ name, message }) {

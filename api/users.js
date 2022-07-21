@@ -145,6 +145,6 @@ module.exports = usersRouter;
 
 //curl http://localhost:3000/api/users/login -H "Content-Type: application/json" -X POST -d '{"username": "glamgalDelete3", "password": "soglam"}'
 
-//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJnbGFtZ2FsRGVsZXRlMyIsImlhdCI6MTY1ODQyNjI5Nn0.KYfq2KSU6xgcDcXCcm-bWq319RWF-AEUj5TC2PlzQNs
+//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJnbGFtZ2FsRGVsZXRlMyIsImlhdCI6MTY1ODQyOTI1Nn0.42xyx5hbGfh4uYzchStKBXov9VnHZLr010c0nxwfqAs
 
-//curl http://localhost:3000/api/users/6 -X DELETE -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJnbGFtZ2FsRGVsZXRlMyIsImlhdCI6MTY1ODQyNjI5Nn0.KYfq2KSU6xgcDcXCcm-bWq319RWF-AEUj5TC2PlzQNs'
+//curl http://localhost:3000/api/users/6 -X DELETE -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJnbGFtZ2FsRGVsZXRlMyIsImlhdCI6MTY1ODQzMTM5NH0.3B-0kiZlwNYveFW4RN29hZ2yBkp9-kTqK2P82S7JSJM'
