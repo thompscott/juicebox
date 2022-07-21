@@ -104,6 +104,27 @@ async function createInitialUsers() {
       location: 'Upper East Side',
       active: true,
     });
+    await createUser({
+      username: 'glamgalDelete',
+      password: 'soglam',
+      name: 'Joshua',
+      location: 'Upper East Side',
+      active: true,
+    });
+    await createUser({
+      username: 'glamgalDelete2',
+      password: 'soglam',
+      name: 'Joshua',
+      location: 'Upper East Side',
+      active: true,
+    });
+    await createUser({
+      username: 'glamgalDelete3',
+      password: 'soglam',
+      name: 'Joshua',
+      location: 'Upper East Side',
+      active: true,
+    });
 
     console.log('Finished creating users!');
   } catch (error) {
@@ -193,6 +214,8 @@ async function testDB() {
     console.log('Calling getPostsByTagName with #happy');
     const postsWithHappy = await getPostsByTagName('#happy');
     console.log('Result:', postsWithHappy);
+
+    console.log(await getUserById(6), 'this id:6*********');
 
     console.log('Finished database tests!');
   } catch (error) {

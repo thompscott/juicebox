@@ -52,7 +52,6 @@ postsRouter.get('/:id', async (req, res, next) => {
   } catch ({ name, message }) {
     next({ name, message });
   }
-
 });
 
 postsRouter.post('/', requireUser, async (req, res, next) => {
@@ -72,7 +71,6 @@ postsRouter.post('/', requireUser, async (req, res, next) => {
   try {
     const post = await createPost(postData);
     res.send({ post });
-
   } catch ({ name, message }) {
     next({ name, message });
   }

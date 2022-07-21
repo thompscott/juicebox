@@ -1,7 +1,13 @@
 require('dotenv').config();
 const express = require('express');
 const usersRouter = express.Router();
-const { getAllUsers, getUserByUsername, createUser } = require('../db');
+const {
+  getAllUsers,
+  getUserByUsername,
+  createUser,
+  getUserById,
+  updateUser,
+} = require('../db');
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = process.env;
 
@@ -17,6 +23,20 @@ usersRouter.get('/', async (req, res) => {
   res.send({
     users,
   });
+});
+
+usersRouter.use('/:userId', (req, res, next) => {
+  console.log('A request is being made to /users/id');
+  next();
+});
+
+usersRouter.get('/:userId', async (req, res, next) => {
+  try {
+    const user = await getUserById(req.params.userId);
+    res.send(user);
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 //USER LOGIN
@@ -92,4 +112,39 @@ usersRouter.post('/register', async (req, res, next) => {
   }
 });
 
+//Delete User
+usersRouter.delete('/:userId', async (req, res, next) => {
+  console.log('this is the delete function');
+  try {
+    const user = await getUserById(req.params.userId);
+
+    if (user && user[0].id == req.user.id) {
+      const updatedUser = await updateUser(user[0].id, { active: false });
+
+      res.send({ user: updatedUser });
+    } else {
+      // if there was a post, throw UnauthorizedUserError, otherwise throw PostNotFoundError
+      next(
+        user
+          ? {
+              name: 'UnauthorizedUserError',
+              message: 'You cannot delete a user which is not yours',
+            }
+          : {
+              name: 'UserNotFoundError',
+              message: 'That user does not exist',
+            }
+      );
+    }
+  } catch ({ name, message }) {
+    next({ name, message });
+  }
+});
+
 module.exports = usersRouter;
+
+//curl http://localhost:3000/api/users/login -H "Content-Type: application/json" -X POST -d '{"username": "glamgalDelete3", "password": "soglam"}'
+
+//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJnbGFtZ2FsRGVsZXRlMyIsImlhdCI6MTY1ODQyNjI5Nn0.KYfq2KSU6xgcDcXCcm-bWq319RWF-AEUj5TC2PlzQNs
+
+//curl http://localhost:3000/api/users/6 -X DELETE -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJnbGFtZ2FsRGVsZXRlMyIsImlhdCI6MTY1ODQyNjI5Nn0.KYfq2KSU6xgcDcXCcm-bWq319RWF-AEUj5TC2PlzQNs'

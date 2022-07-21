@@ -5,7 +5,6 @@ const { JWT_SECRET } = process.env;
 const express = require('express');
 const apiRouter = express.Router();
 
-
 //JWT middleware
 apiRouter.use(async (req, res, next) => {
   const prefix = 'Bearer ';
@@ -46,6 +45,7 @@ apiRouter.use((req, res, next) => {
 
 const usersRouter = require('./users');
 apiRouter.use('/users', usersRouter);
+apiRouter.use('/users/:userId', usersRouter);
 
 const postsRouter = require('./posts');
 apiRouter.use('/posts', postsRouter);
