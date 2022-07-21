@@ -26,7 +26,6 @@ async function updateUser(id, fields = {}) {
     .map((key, index) => `"${key}"=$${index + 1}`)
     .join(', ');
 
-  // return early if this is called without fields
   if (setString.length === 0) {
     return;
   }
@@ -61,7 +60,7 @@ async function getAllUsers() {
 }
 
 async function getUserById(userId) {
-  // first get the user (NOTE: Remember the query returns
+  // first get the user
   try {
     const { rows } = await client.query(`
     SELECT id, username, name, location, active FROM users
@@ -147,7 +146,6 @@ async function updatePost(id, fields = {}) {
     .map((key, index) => `"${key}"=$${index + 1}`)
     .join(', ');
 
-  // return early if this is called without fields
   try {
     if (setString.length > 0) {
       await client.query(
@@ -262,13 +260,9 @@ async function createTags(tagList) {
     return;
   }
 
-  // need something like: $1), ($2), ($3
   const insertValues = tagList.map((_, index) => `$${index + 1}`).join('), (');
-  // then we can use: (${ insertValues }) in our string template
 
-  // need something like $1, $2, $3
   const selectValues = tagList.map((_, index) => `$${index + 1}`).join(', ');
-  // then we can use (${ selectValues }) in our string template
 
   try {
     await client.query(

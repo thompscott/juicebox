@@ -16,7 +16,7 @@ postsRouter.use((req, res, next) => {
 });
 
 postsRouter.use('/:id', (req, res, next) => {
-  console.log('A request is being made to /posts');
+  console.log('A request is being made to /posts/id');
 
   next();
 });
@@ -37,14 +37,26 @@ postsRouter.get('/', async (req, res, next) => {
   }
 });
 
-postsRouter.get('/:id', async (req, res) => {
-  post = req.params.id;
-  res.send(post);
+postsRouter.get('/:id', async (req, res, next) => {
+  try {
+    const post = await getPostById(req.params.id);
+
+    if (post.active || (req.user && post.author.id === req.user.id)) {
+      res.send({ post });
+    } else {
+      next({
+        name: 'PostAccessError',
+        message: 'You do not have access to this post',
+      });
+    }
+  } catch ({ name, message }) {
+    next({ name, message });
+  }
+
 });
 
 postsRouter.post('/', requireUser, async (req, res, next) => {
   const { title, content, tags = '' } = req.body;
-  // console.log(req, 'req from post');
   const tagArr = tags.trim().split(/\s+/);
   const postData = {};
 
@@ -60,11 +72,7 @@ postsRouter.post('/', requireUser, async (req, res, next) => {
   try {
     const post = await createPost(postData);
     res.send({ post });
-    // add authorId, title, content to postData object
-    // const post = await createPost(postData);
-    // this will create the post and the tags for us
-    // if the post comes back, res.send({ post });
-    // otherwise, next an appropriate error object
+
   } catch ({ name, message }) {
     next({ name, message });
   }
@@ -133,24 +141,3 @@ postsRouter.delete('/:postId', requireUser, async (req, res, next) => {
 });
 
 module.exports = postsRouter;
-
-//LOGIN
-//curl http://localhost:3000/api/users/login -H "Content-Type: application/json" -X POST -d '{"username": "albert", "password": "bertie99"}'
-
-//TOKEN
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTgzNDM5NzJ9.k7-QhTPWmXOl-o5-ardjNTkVbbncy52OA-75jZkR8Ws
-
-//POST
-// curl http://localhost:3000/api/posts -X POST -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTgzMzg1Njl9.eBHKbJl8ZnFk06YUW2MioOmpI1F0VA4SM6RBXHU4vgs' -H 'Content-Type: application/json' -d '{"title": "I still do not like tags", "content": "CMON! why do people use them?"}'
-
-//PATCH
-//curl http://localhost:3000/api/posts/1 -X PATCH -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTgzNDE2OTJ9.cMEY6-4kUqbmBpG7K3dbkMJ2Mj2R5wNjCdYO1b0iGjk' -H 'Content-Type: application/json' -d '{"title": "updating my old stuff", "tags": "#oldisnewagain"}'
-
-// DELETE
-//curl http://localhost:3000/api/posts/235 -X DELETE -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTgzNDM5NzJ9.k7-QhTPWmXOl-o5-ardjNTkVbbncy52OA-75jZkR8Ws'
-
-//CHECKIN INACTIVE POSTS
-// curl http://localhost:3000/api/posts -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTgzNDM5NzJ9.k7-QhTPWmXOl-o5-ardjNTkVbbncy52OA-75jZkR8Ws'
-
-// TAGS
-//curl http://localhost:3000/api/tags/%23happy/posts -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTgzNDM5NzJ9.k7-QhTPWmXOl-o5-ardjNTkVbbncy52OA-75jZkR8Ws'

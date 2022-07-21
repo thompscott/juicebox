@@ -5,10 +5,6 @@ const { JWT_SECRET } = process.env;
 const express = require('express');
 const apiRouter = express.Router();
 
-//const webToken =
-// 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTgyODcxMTR9.rmiF1LDWhZmN4JTTgiHk8HPc8rRTVKAbrXb0W-_SurY';
-
-//const command = ` curl http://localhost:3000/api -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTgyODcxMTR9.rmiF1LDWhZmN4JTTgiHk8HPc8rRTVKAbrXb0W-_SurY'`;
 
 //JWT middleware
 apiRouter.use(async (req, res, next) => {

@@ -176,13 +176,6 @@ async function testDB() {
     });
     console.log('Result:', updateUserResult);
 
-    // console.log('Calling updatePost on posts[0]');
-    // const updatePostResult = await updatePost(posts[0].id, {
-    //   title: 'Newname Sogood',
-    //   content: 'This is new content',
-    // });
-    // console.log('Result:', updatePostResult);
-
     console.log('Calling getPostsByUsers[0]');
     const postsByUsers = await getPostsByUser(users[0].id);
     console.log('Result:', postsByUsers);
