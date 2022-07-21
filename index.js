@@ -1,6 +1,6 @@
 const express = require('express');
 const server = express();
-const port = 3000;
+const { PORT = 3000 } = process.env;
 const apiRouter = require('./api');
 const morgan = require('morgan');
 require('dotenv').config();
@@ -24,6 +24,6 @@ server.use('/api', apiRouter);
 const { client, getUserByUsername } = require('./db');
 client.connect();
 
-server.listen(port, () => {
-  console.log(`Running on server: ${port}`);
+server.listen(PORT, () => {
+  console.log(`Running on server: ${PORT}`);
 });
