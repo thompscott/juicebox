@@ -26,7 +26,7 @@ postsRouter.get('/', async (req, res, next) => {
     const allPosts = await getAllPosts();
 
     const posts = allPosts.filter((post) => {
-      return post.active || (req.user && post.author.id === req.user.id);
+      return post.active || (req.user && post.author.id === req.user[0].id); //Test
     });
 
     res.send({
@@ -41,7 +41,7 @@ postsRouter.get('/:id', async (req, res, next) => {
   try {
     const post = await getPostById(req.params.id);
 
-    if (post.active || (req.user && post.author.id === req.user.id)) {
+    if (post.active || (req.user && post.author.id === req.user[0].id)) { //Test
       res.send({ post });
     } else {
       next({
@@ -59,7 +59,7 @@ postsRouter.post('/', requireUser, async (req, res, next) => {
   const tagArr = tags.trim().split(/\s+/);
   const postData = {};
 
-  postData.authorId = req.user.author.id;
+  postData.authorId = req.user.author.id; //check this
   postData.title = title;
   postData.content = content;
 
@@ -97,7 +97,7 @@ postsRouter.patch('/:postId', requireUser, async (req, res, next) => {
   try {
     const originalPost = await getPostById(postId);
 
-    if (originalPost.author.id === req.user.id) {
+    if (originalPost.author.id === req.user[0].id) { //test
       const updatedPost = await updatePost(postId, updateFields);
       res.send({ post: updatedPost });
     } else {
@@ -115,7 +115,7 @@ postsRouter.delete('/:postId', requireUser, async (req, res, next) => {
   try {
     const post = await getPostById(req.params.postId);
 
-    if (post && post.author.id === req.user.id) {
+    if (post && post.author.id === req.user[0].id) {//test
       const updatedPost = await updatePost(post.id, { active: false });
 
       res.send({ post: updatedPost });

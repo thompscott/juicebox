@@ -114,11 +114,10 @@ usersRouter.post('/register', async (req, res, next) => {
 
 //Delete User
 usersRouter.delete('/:userId', async (req, res, next) => {
-  console.log('this is the delete function');
   try {
     const user = await getUserById(req.params.userId);
 
-    if (user && user[0].id == req.user.id) {
+    if (user && user[0].id == req.user[0].id) {
       const updatedUser = await updateUser(user[0].id, { active: false });
 
       res.send({ user: updatedUser });
