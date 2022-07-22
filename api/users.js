@@ -145,10 +145,10 @@ module.exports = usersRouter;
 
 //curl http://localhost:3000/api/users/login -H "Content-Type: application/json" -X POST -d '{"username": "albert", "password": "bertie99"}'
 
-//"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTg1MDI3Nzl9.pADmTTOTxxlTLr3amjru80HclL6MdVwU6fR4pB0EqgM
+//"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTg1MDY0OTd9.9Hb7Z30PUKbTIK2LOw6B6xxK_4Y2gwf3GTiEnGXyUHU
 
 //delete
-//curl http://localhost:3000/api/users/6 -X DELETE -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTg1MDI3Nzl9.pADmTTOTxxlTLr3amjru80HclL6MdVwU6fR4pB0EqgM'
+//curl http://localhost:3000/api/users/1 -X DELETE -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTg1MDY0OTd9.9Hb7Z30PUKbTIK2LOw6B6xxK_4Y2gwf3GTiEnGXyUHU'
 
 //patch
 // curl http://localhost:3000/api/posts/1 -X PATCH -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTg1MDI3Nzl9.pADmTTOTxxlTLr3amjru80HclL6MdVwU6fR4pB0EqgM' -H 'Content-Type: application/json' -d '{"title": "updating my old stuff", "tags": "#oldisnewagain"}'
