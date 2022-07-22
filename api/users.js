@@ -123,7 +123,6 @@ usersRouter.delete('/:userId', requireUser, async (req, res, next) => {
 
       res.send({ user: updatedUser });
     } else {
-      // if there was a post, throw UnauthorizedUserError, otherwise throw PostNotFoundError
       next(
         user
           ? {
@@ -141,20 +140,31 @@ usersRouter.delete('/:userId', requireUser, async (req, res, next) => {
   }
 });
 
+// patch
+usersRouter.patch('/:userId', requireUser, async (req, res, next) => {
+  try {
+    const user = await getUserById(req.params.userId);
+
+    if (user && user[0].id == req.user[0].id) {
+      const updatedUser = await updateUser(user[0].id, { active: true });
+
+      res.send({ user: updatedUser });
+    } else {
+      next(
+        user
+          ? {
+              name: 'UnauthorizedUserError',
+              message: 'You cannot Activate a user which is not yours',
+            }
+          : {
+              name: 'UserNotFoundError',
+              message: 'That user does not exist',
+            }
+      );
+    }
+  } catch ({ name, message }) {
+    next({ name, message });
+  }
+});
+
 module.exports = usersRouter;
-
-//curl http://localhost:3000/api/users/login -H "Content-Type: application/json" -X POST -d '{"username": "albert", "password": "bertie99"}'
-
-//"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTg1MDY0OTd9.9Hb7Z30PUKbTIK2LOw6B6xxK_4Y2gwf3GTiEnGXyUHU
-
-//delete
-//curl http://localhost:3000/api/users/1 -X DELETE -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTg1MDY0OTd9.9Hb7Z30PUKbTIK2LOw6B6xxK_4Y2gwf3GTiEnGXyUHU'
-
-//patch
-// curl http://localhost:3000/api/posts/1 -X PATCH -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTg1MDI3Nzl9.pADmTTOTxxlTLr3amjru80HclL6MdVwU6fR4pB0EqgM' -H 'Content-Type: application/json' -d '{"title": "updating my old stuff", "tags": "#oldisnewagain"}'
-
-//Delete post
-//curl http://localhost:3000/api/posts/1 -X DELETE -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTg1MDI3Nzl9.pADmTTOTxxlTLr3amjru80HclL6MdVwU6fR4pB0EqgM'
-
-//POST
-// curl http://localhost:3000/api/posts -X POST -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTg1MDI3Nzl9.pADmTTOTxxlTLr3amjru80HclL6MdVwU6fR4pB0EqgM' -H 'Content-Type: application/json' -d '{"title": "test post", "content": "how is this?", "tags": " #once #twice    #happy"}'
