@@ -10,6 +10,7 @@ const {
 } = require('../db');
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = process.env;
+const { requireUser } = require('./utils');
 
 usersRouter.use((req, res, next) => {
   console.log('A request is being made to /users');
@@ -19,9 +20,9 @@ usersRouter.use((req, res, next) => {
 
 usersRouter.get('/', async (req, res) => {
   const users = await getAllUsers();
-
+  const activeUsers = users.filter((user) => user.active === true);
   res.send({
-    users,
+    activeUsers,
   });
 });
 
@@ -113,7 +114,7 @@ usersRouter.post('/register', async (req, res, next) => {
 });
 
 //Delete User
-usersRouter.delete('/:userId', async (req, res, next) => {
+usersRouter.delete('/:userId', requireUser, async (req, res, next) => {
   try {
     const user = await getUserById(req.params.userId);
 
@@ -142,8 +143,18 @@ usersRouter.delete('/:userId', async (req, res, next) => {
 
 module.exports = usersRouter;
 
-//curl http://localhost:3000/api/users/login -H "Content-Type: application/json" -X POST -d '{"username": "glamgalDelete3", "password": "soglam"}'
+//curl http://localhost:3000/api/users/login -H "Content-Type: application/json" -X POST -d '{"username": "albert", "password": "bertie99"}'
 
-//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJnbGFtZ2FsRGVsZXRlMyIsImlhdCI6MTY1ODQyOTI1Nn0.42xyx5hbGfh4uYzchStKBXov9VnHZLr010c0nxwfqAs
+//"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTg1MDI3Nzl9.pADmTTOTxxlTLr3amjru80HclL6MdVwU6fR4pB0EqgM
 
-//curl http://localhost:3000/api/users/6 -X DELETE -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJnbGFtZ2FsRGVsZXRlMyIsImlhdCI6MTY1ODQzMTM5NH0.3B-0kiZlwNYveFW4RN29hZ2yBkp9-kTqK2P82S7JSJM'
+//delete
+//curl http://localhost:3000/api/users/6 -X DELETE -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTg1MDI3Nzl9.pADmTTOTxxlTLr3amjru80HclL6MdVwU6fR4pB0EqgM'
+
+//patch
+// curl http://localhost:3000/api/posts/1 -X PATCH -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTg1MDI3Nzl9.pADmTTOTxxlTLr3amjru80HclL6MdVwU6fR4pB0EqgM' -H 'Content-Type: application/json' -d '{"title": "updating my old stuff", "tags": "#oldisnewagain"}'
+
+//Delete post
+//curl http://localhost:3000/api/posts/1 -X DELETE -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTg1MDI3Nzl9.pADmTTOTxxlTLr3amjru80HclL6MdVwU6fR4pB0EqgM'
+
+//POST
+// curl http://localhost:3000/api/posts -X POST -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbGJlcnQiLCJpYXQiOjE2NTg1MDI3Nzl9.pADmTTOTxxlTLr3amjru80HclL6MdVwU6fR4pB0EqgM' -H 'Content-Type: application/json' -d '{"title": "test post", "content": "how is this?", "tags": " #once #twice    #happy"}'
