@@ -26,16 +26,8 @@ postsRouter.get('/', async (req, res, next) => {
   try {
     const allPosts = await getAllPosts();
 
-
-
-    const posts = allPosts.filter(async (post) => {
-      const author = await getUserById(post.author.id);
-      console.log(author, "author")
-      console.log(author[0].active, "active")
-      console.log((post.active && author[0].active))
-      console.log((!!(req.user && post.author.id === req.user[0].id)))
-      console.log(((post.active && author[0].active) || (!!(req.user && post.author.id === req.user[0].id))))
-      return ((post.active && author[0].active) || (!!(req.user && post.author.id === req.user[0].id)));
+    const posts = allPosts.filter((post) => {
+      return post.active || (req.user && post.author.id === req.user[0].id);
     });
 
     res.send({
